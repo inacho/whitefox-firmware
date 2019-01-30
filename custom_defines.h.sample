@@ -1,0 +1,5 @@
+
+#define MY_EMAIL "user@example.com"
+#define MY_WORK_EMAIL "user@company.com"
+#define MY_WORK_USERNAME "user"
+#define MY_PHONE_NUMBER "08044449999"
