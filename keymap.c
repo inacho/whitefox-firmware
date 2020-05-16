@@ -63,6 +63,22 @@ enum custom_keycodes {
 #define LAYER_CAPW 5
 #define LAYER_TAB  6
 
+#define DF_WIN DF(LAYER_WIN)
+#define DF_MAC DF(LAYER_MAC)
+
+void keymap_led_blink(void)
+{
+#ifdef BACKLIGHT_ENABLE
+    backlight_toggle();
+    wait_ms(100);
+    backlight_toggle();
+#endif
+}
+
+uint32_t default_layer_state_set_user(uint32_t state) {
+    keymap_led_blink();
+    return state;
+}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!process_record_dynamic_macro(keycode, record)) {
@@ -74,6 +90,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
             // FN1 key macros
             case MCR_SSH:
+                keymap_led_blink();
                 SEND_STRING(SS_TAP(X_ENTER)"~."); // Disconnect SSH session
                 return false;
             case MCR_EUR:
@@ -211,7 +228,7 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Base layout WIN
     [LAYER_WIN] = LAYOUT_truefox( \
         KC_ESC,                  KC_1,    KC_2,   KC_3,   KC_4,   KC_5,   KC_6,   KC_7,   KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSLS, KC_GRV, KC_F12, \
-        LT(LAYER_TAB, KC_TAB),   KC_Q,    KC_W,   KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSPC, KC_MPLY,\
+        KC_TAB,                  KC_Q,    KC_W,   KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSPC, KC_MPLY,\
         OSL(LAYER_CAPW),         KC_A,    KC_S,   KC_D,   KC_F,   KC_G,   KC_H,   KC_J,   KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_VOLU,\
         KC_LSFT,                 KC_Z,    KC_X,   KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT, KC_UP,   KC_VOLD,\
         KC_LGUI,        KC_LALT, KC_LCTL,               KC_SPC,           KC_FN1, KC_FN2,                            KC_LEFT, KC_DOWN, KC_RGHT \
@@ -219,9 +236,9 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Activated holding FN1
     [LAYER_FN1] = LAYOUT_truefox( \
         MCR_SSH,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10, KC_F11,  KC_F12,  KC_F13,  KC_F14, KC_F15, \
-        _______, _______, _______, MCR_EUR, DYN_REC, DYN_STO, _______, _______, _______, _______, KC_MPLY, DF(LAYER_MAC), DF(LAYER_WIN),  KC_DEL, _______,\
+        _______, _______,  DF_WIN, MCR_EUR, DYN_REC, DYN_STO, _______, _______, _______, _______, KC_MPLY, _______, _______,  KC_DEL, _______,\
         KC_CAPS,   KC_F1,   KC_F2, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, KC_MFFD,\
-        _______,          _______, _______, _______, _______, _______, _______, KC_MUTE, _______, _______, _______, _______, KC_PGUP, KC_MRWD,\
+        _______,          _______, _______, _______, _______, _______, _______,  DF_MAC, _______, _______, _______, _______, KC_PGUP, KC_MRWD,\
         _______, _______, _______,               _______,          _______, _______,                                KC_HOME, KC_PGDN, KC_END  \
     ),
     // Activated holding FN2
