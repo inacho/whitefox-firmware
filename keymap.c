@@ -1,3 +1,5 @@
+#include QMK_KEYBOARD_H
+
 #include "custom_defines.h"
 #include "whitefox.h"
 
@@ -61,8 +63,18 @@ enum custom_keycodes {
 #define LAYER_CAPW 5
 #define LAYER_TAB  6
 
+#define KC_FN1 MO(LAYER_FN1)
+#define KC_FN2 MO(LAYER_FN2)
 #define DF_WIN DF(LAYER_WIN)
 #define DF_MAC DF(LAYER_MAC)
+
+// enable the numpad on start-up to make windows macros (alt keycodes) work
+void led_set_keymap(uint8_t usb_led) {
+    if (!(usb_led & (1<<USB_LED_NUM_LOCK))) {
+        register_code(KC_NUMLOCK);
+        unregister_code(KC_NUMLOCK);
+    }
+}
 
 void keymap_led_blink(void)
 {
@@ -143,27 +155,27 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
             // CapsLock single tap macros for Windows
             case MACRO_NW:
-                SEND_STRING(SS_RALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_4)SS_TAP(X_KP_1))); // ñ
+                SEND_STRING(SS_LALT(SS_TAP(X_KP_1)SS_TAP(X_KP_6)SS_TAP(X_KP_4))); // ñ
                 layer_off(LAYER_CAPW);
                 return false;
             case MACRO_AW:
-                SEND_STRING(SS_RALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_2)SS_TAP(X_KP_5))); // á
+                SEND_STRING(SS_LALT(SS_TAP(X_KP_1)SS_TAP(X_KP_6)SS_TAP(X_KP_0))); // á
                 layer_off(LAYER_CAPW);
                 return false;
             case MACRO_EW:
-                SEND_STRING(SS_RALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_3)SS_TAP(X_KP_3))); // é
+                SEND_STRING(SS_LALT(SS_TAP(X_KP_1)SS_TAP(X_KP_3)SS_TAP(X_KP_0))); // é
                 layer_off(LAYER_CAPW);
                 return false;
             case MACRO_IW:
-                SEND_STRING(SS_RALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_3)SS_TAP(X_KP_7))); // í
+                SEND_STRING(SS_LALT(SS_TAP(X_KP_1)SS_TAP(X_KP_6)SS_TAP(X_KP_1))); // í
                 layer_off(LAYER_CAPW);
                 return false;
             case MACRO_OW:
-                SEND_STRING(SS_RALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_4)SS_TAP(X_KP_3))); // ó
+                SEND_STRING(SS_LALT(SS_TAP(X_KP_1)SS_TAP(X_KP_6)SS_TAP(X_KP_2))); // ó
                 layer_off(LAYER_CAPW);
                 return false;
             case MACRO_UW:
-                SEND_STRING(SS_RALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_5)SS_TAP(X_KP_0))); // ú
+                SEND_STRING(SS_LALT(SS_TAP(X_KP_1)SS_TAP(X_KP_6)SS_TAP(X_KP_3))); // ú
                 layer_off(LAYER_CAPW);
                 return false;
 
@@ -204,7 +216,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 };
 
-const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Layer 0
      * ,----------------------------------------------------------------.
      * |Esc|  1|  2|  3|  4|  5|  6|  7|  8|  9|  0|  -|  =|  \|  `|F12 |
