@@ -7,6 +7,7 @@ cd "$APP_PATH"
 
 
 KEYMAP_FOLDER="$APP_PATH/qmk_firmware/keyboards/whitefox/keymaps/nacho"
+VISUALIZERS_FOLDER="$APP_PATH/qmk_firmware/quantum/visualizer"
 
 
 if [[ ! -d ./qmk_firmware ]]; then
@@ -20,6 +21,8 @@ fi
 
 rm -rf "$KEYMAP_FOLDER"
 mkdir -p "$KEYMAP_FOLDER"
+
+cp "$APP_PATH/default_animations.c" "$VISUALIZERS_FOLDER"
 cp "$APP_PATH/keymap.c" "$KEYMAP_FOLDER"
 cp "$APP_PATH/custom_defines.h" "$KEYMAP_FOLDER"
 cp "$APP_PATH/rules.mk" "$KEYMAP_FOLDER"
